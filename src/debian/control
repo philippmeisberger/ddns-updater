@@ -1,0 +1,18 @@
+Source: ddns-updater
+Maintainer: Philipp Meisberger <team@pm-codeworks.de>
+Section: python
+Priority: optional
+Standards-Version: 1.0
+Build-Depends: debhelper (>= 9)
+
+Package: ddns-updater
+Depends: python (>= 3.0)
+Architecture: all
+Homepage: http://www.pm-codeworks.de/ddns-updater.html
+Description: DDNS client to register your dynamic IP address
+ The Dynamic DNS service allows you to alias a dynamic IP address to a
+ static hostname, allowing your computer to be more easily accessed from
+ various locations on the Internet.
+ .
+ This is a simple Python script to register your dynamic IP address using
+ the NIC V2.0 protocol.

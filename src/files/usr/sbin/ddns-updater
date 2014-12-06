@@ -1,0 +1,231 @@
+#!/usr/bin/env python3
+
+"""
+DDNS Updater
+@author Philipp Meisberger
+
+Copyright 2014 Philipp Meisberger
+All rights reserved.
+"""
+
+## generic:
+## https://<username>:<password>@<server><server_dir>?hostname=<hostname>&myip=<ip>
+
+from http.client import HTTPSConnection, HTTPConnection
+from base64 import b64encode
+import os
+import configparser
+
+
+class ddnsUpdater(object):
+    """
+    DDNS update client.
+
+    The config file path.
+    @var string
+    """
+    __configParser = None
+
+    """
+    The ConfigParser instance.
+    @var ConfigParser
+    """
+    __configFile = None
+
+    """
+    Profile (config section) to load.
+    @var string
+    """
+    __profile = None
+    
+    def __init__(self, configFile, profile):
+        """
+        Constructor
+
+        """
+
+        try:
+            if ( os.access(configFile, os.R_OK) == False ):
+                raise Exception('The configuration file "' + configFile + '" is not readable!')
+
+            self.__configFile = configFile
+            self.__profile = profile
+            self.__configParser = configparser.ConfigParser()
+            self.__configParser.read(configFile)
+
+        except Exception as e:
+            print('[Exception] ', e)
+
+
+    def sendMail(self, subject, text):
+        """
+        Sends a notification e-mail to recipient.
+
+        @param string subject
+        @param string text
+        """
+
+        ## Try to send mail
+        try:
+            ## Get E-Mail notification data
+            notify = self.__configParser.getboolean('Mail', 'notify')
+
+            ## No mail notifications?
+            if ( not notify ):
+                return False
+
+            mailServer = self.__configParser.get('Mail', 'stmp_server')
+            mailServerPort = int(self.self.__configParser.get('Mail', 'port'), 10)
+            mailUsername = self.__configParser.get('Mail', 'username')
+            mailPassword = self.__configParser.get('Mail', 'password')
+            mailRecipient = self.__configParser.get('Mail', 'recipient')
+
+            # Setup mail
+            mail = MIMEMultipart()
+            mail['From'] = sender
+            mail['To'] = mailRecipient
+            mail['Date'] = formatdate(localtime=True)
+            mail['Subject'] = subject
+            mail.attach( MIMEText(text) )
+
+            # Connect to SMTP server
+            smtp = smtplib.SMTP(mailServer, mailServerPort)
+
+            # Open plain connection
+            smtp.ehlo()
+
+            # TLS encryption
+            smtp.starttls()
+
+            # Switch to TLS encrypted connection
+            smtp.ehlo()
+
+            # Send login information
+            smtp.login(mailUsername, mailPassword)
+
+            # Send mail
+            smtp.sendmail(mailUsername, mailRecipient, mail.as_string())
+
+            # Close connection
+            smtp.quit()
+            return True
+
+        except Exception as e:
+            print('[Exception] ', e)
+            return False
+
+
+    def getWebIp(self):
+        """
+        Retrieves external IP from a web server.
+
+        @param string webipServer
+        @param string webipDir
+        """
+
+        try:
+            ## Get web server data
+            webipServer = self.__configParser.get(self.__profile, 'webip_server')
+            webipDir = self.__configParser.get(self.__profile, 'webip_dir')
+
+            ## Connect to web server
+            connection = HTTPConnection(webipServer)
+
+            ## Retrieve external IP address
+            connection.request('GET', webipDir)
+            response = connection.getresponse()
+
+            ## Successful?
+            if ( response.status == 200 ):
+                webip = response.read()
+                return webip.decode('ascii')
+            else:
+                raise Exception('Could not retrieve web IP from "'+ webipServer + webipDir +'"!')
+
+        except Exception as e:
+            print('[Exception] ', e)
+            self.sendMail('DDNS Updater Error', str(e))
+            return ''
+
+
+    def update(self, newIp):
+        """
+        Updates DNS record
+
+        @param string newIp
+        """
+
+        try:
+            ## DDNS information
+            ipAddress = self.__configFile.readString('DDNS', 'ip')
+
+            ## No update required?
+            if ( ipAddress == newIp ):
+                print('No DDNS update required')
+                return False
+
+            print('DDNS update required')
+            server = self.__configParser.get(self.__profile, 'server')
+            serverDir = self.__configParser.get(self.__profile, 'server_dir')
+            username = self.__configParser.get(self.__profile, 'username')
+            password = self.__configParser.get(self.__profile, 'password')
+            hostname = self.__configParser.get(self.__profile, 'hostname')
+
+            ## Set up the HTTPS connection
+            connection = HTTPSConnection(server)
+
+            ## We need to base64 encode it and then decode it to acsii as python 3 stores it as a byte string
+            credentials = username +':'+ password
+            userAndPass = b64encode(credentials.encode('UTF-8')).decode('ascii')
+            headers = { 'Authorization': 'Basic %s' %  userAndPass , 'user-agent': 'DDNSUpdater/1.0 (PM Code Works DDNS Update Utility)'}
+
+            ## Start update
+            connection.request('GET', serverDir +'?hostname='+ hostname +'&myip='+ webip, headers=headers)
+            response = connection.getresponse()
+
+            ## Successful?
+            if ( response.status == 200 ):
+                print('Update successful!')
+                configFile.writeString(self.__profile, 'ip', webip)
+
+                # Checks if path/file is writable
+                if ( os.access(self.__configFile, os.W_OK) == True ):
+                    f = open(self.__configFile, 'w')
+                    self.__configParser.write(f)
+                    f.close()
+
+            elif ( response.status == 401 ):
+                raise Exception('Bad password or username!')
+            else:
+                raise Exception('Error while updating DNS! HTTP error: '+ str(response.status))
+
+            data = response.read()
+            data = data.decode('ascii')
+            print(data)
+            sendMail('DDNS Updater', data)
+            return True
+
+        except Exception as e:
+            print('[Exception] ', e)
+            sendMail('DDNS Updater Error', str(e))
+            return False
+
+
+if ( __name__ == '__main__' ):
+
+    profile = 'DDNS'
+
+    ## Load another profile (section)? 
+    if ( len(sys.argv) == 3 ):
+        if ( (sys.argv[1] == '-p') or (sys.argv[1] == '--profile') ):
+            profile = sys.argv[2]
+    
+    updater = ddnsUpdater('/etc/ddns-updater/ddns.conf', profile)
+    webip = updater.getWebIp()
+
+    if ( webip != '' ):
+        print('Detected web IP: '+ webip)
+    else:
+        exit(1)
+
+    updater.update(webip)
