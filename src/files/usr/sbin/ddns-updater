@@ -10,10 +10,20 @@ All rights reserved.
 
 ## generic:
 ## https://<username>:<password>@<server><server_dir>?hostname=<hostname>&myip=<ip>
+##
+## @see http://de.dyn.com/support/developers/api/perform-update/
+##
 
 from http.client import HTTPSConnection, HTTPConnection
 from base64 import b64encode
+
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import formatdate
+
 import os
+import sys
 import configparser
 
 
@@ -75,18 +85,18 @@ class ddnsUpdater(object):
                 return False
 
             mailServer = self.__configParser.get('Mail', 'stmp_server')
-            mailServerPort = int(self.self.__configParser.get('Mail', 'port'), 10)
+            mailServerPort = int(self.__configParser.get('Mail', 'port'), 10)
             mailUsername = self.__configParser.get('Mail', 'username')
             mailPassword = self.__configParser.get('Mail', 'password')
             mailRecipient = self.__configParser.get('Mail', 'recipient')
 
             # Setup mail
             mail = MIMEMultipart()
-            mail['From'] = sender
+            mail['From'] = 'DDNS Updater'
             mail['To'] = mailRecipient
             mail['Date'] = formatdate(localtime=True)
             mail['Subject'] = subject
-            mail.attach( MIMEText(text) )
+            mail.attach(MIMEText(text, 'plain'))
 
             # Connect to SMTP server
             smtp = smtplib.SMTP(mailServer, mailServerPort)
@@ -157,7 +167,7 @@ class ddnsUpdater(object):
 
         try:
             ## DDNS information
-            ipAddress = self.__configFile.readString('DDNS', 'ip')
+            ipAddress = self.__configParser.get(self.__profile, 'ip')
 
             ## No update required?
             if ( ipAddress == newIp ):
@@ -186,7 +196,7 @@ class ddnsUpdater(object):
             ## Successful?
             if ( response.status == 200 ):
                 print('Update successful!')
-                configFile.writeString(self.__profile, 'ip', webip)
+                self.__configParser.set(self.__profile, 'ip', webip)
 
                 # Checks if path/file is writable
                 if ( os.access(self.__configFile, os.W_OK) == True ):
@@ -202,12 +212,12 @@ class ddnsUpdater(object):
             data = response.read()
             data = data.decode('ascii')
             print(data)
-            sendMail('DDNS Updater', data)
+            self.sendMail('DDNS Updater', data)
             return True
 
         except Exception as e:
             print('[Exception] ', e)
-            sendMail('DDNS Updater Error', str(e))
+            self.sendMail('DDNS Updater Error', str(e))
             return False
 
 
