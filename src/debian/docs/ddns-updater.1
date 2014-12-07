@@ -1,0 +1,39 @@
+.TH ddns-updater 1 "December 2014" "" "DDNS Updater"
+
+.SH NAME
+\fBddns-updater\fP - DDNS client to register your dynamic IP address
+
+.SH SYNOPSIS
+.nf
+.fam C
+\fBddns-updater\fP [\fB--profile\fP NAME \fB--version\fP | \fB--help\fP]
+.fam T
+.fi
+
+.SH DESCRIPTION
+\fBddns-updater\fR is a Python written light-weight Dynamic DNS (DDNS) client to register your IP address on a DNS server using the DynDNS v2.0 protocol. The connection to the DNS server is encrypted using HTTPS. \fBddns-updater\fR gets the actual (external) IP address by a specific web server e.g. checkip.dyndns.com.  An e-mail notfication can be enabled to notify errors and successful DDNS updates. The connection to the configured mail server is encrypted using TLS. \fBddns-updater\fR has to be configured by editing the /etc/ddns-updater/ddns.conf file.
+
+.SH OPTIONS
+.TP
+.B
+\fB--profile\fR, \fB-p\fR NAME
+Loads another profile (INI based section).
+
+.TP
+.B
+\fB--version\fR
+Prints version and exits.
+
+.TP
+.B
+\fB--help\fR, \fB-h\fR
+Show summary of options.
+.PP
+
+.SH FILES
+/etc/ddns-updater/ddns.conf
+
+.SH AUTHORS
+Philipp Meisberger <team@pm-codeworks.de> 
+
+Please send bug reports to the authors mail address and visit http://www.pm-codeworks.de for more interesting projects.
