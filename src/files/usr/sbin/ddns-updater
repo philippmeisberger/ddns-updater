@@ -226,16 +226,25 @@ class ddnsUpdater(object):
 if ( __name__ == '__main__' ):
 
     parser = argparse.ArgumentParser(description='DDNS updater client:')
-    parser.add_argument('--profile', metavar='NAME', help='Loads another profile (section) inside the configuration file.')
+    parser.add_argument('--config', '-c', metavar='NAME', help='Loads another configuration file.')
+    parser.add_argument('--profile', '-p', metavar='NAME', help='Loads another profile (section) inside the configuration file.')
     parser.add_argument('--version', '-v', action='version', version='ddns-updater ' + VERSION, help='Prints version and exits.')
 
     args = vars(parser.parse_args())
-    profile = 'DDNS'
 
+    ## Load another profile?
     if ( args['profile'] ):
-        profile = args['check_user']
+        profile = args['profile']
+    else:
+        profile = 'DDNS'
 
-    updater = ddnsUpdater('/etc/ddns-updater/ddns.conf', profile)
+    ## Load another config file?
+    if ( args['config'] ):
+        config = args['config']
+    else:
+        config = '/etc/ddns-updater/ddns.conf'
+
+    updater = ddnsUpdater(config, profile)
     webip = updater.getWebIp()
 
     if ( webip != '' ):

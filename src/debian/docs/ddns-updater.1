@@ -6,7 +6,7 @@
 .SH SYNOPSIS
 .nf
 .fam C
-\fBddns-updater\fP [\fB--profile\fP NAME \fB--version\fP | \fB--help\fP]
+\fBddns-updater\fP [\fB--config\fR, \fB-c\fR NAME | \fB--profile\fR, \fB-p\fR NAME | \fB--version\fR, \fB-v\fR | \fB--help\fR, \fB-h\fR]
 .fam T
 .fi
 
@@ -16,12 +16,17 @@
 .SH OPTIONS
 .TP
 .B
-\fB--profile\fR, \fB-p\fR NAME
-Loads another profile (INI based section).
+\fB--config\fR, \fB-c\fR NAME
+Loads another configuration file.
 
 .TP
 .B
-\fB--version\fR
+\fB--profile\fR, \fB-p\fR NAME
+Loads another profile (section) inside the configuration file.
+
+.TP
+.B
+\fB--version\fR, \fB-v\fR
 Prints version and exits.
 
 .TP
