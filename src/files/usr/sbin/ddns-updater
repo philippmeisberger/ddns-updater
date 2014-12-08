@@ -9,7 +9,7 @@ All rights reserved.
 """
 
 ## generic:
-## https://<username>:<password>@<server><server_dir>?hostname=<hostname>&myip=<ip>
+## https://<username>:<password>@<server><server_path>?hostname=<hostname>&myip=<ip>
 ##
 ## @see http://de.dyn.com/support/developers/api/perform-update/
 ##
@@ -132,19 +132,19 @@ class ddnsUpdater(object):
         Retrieves external IP from a web server.
 
         @param string webipServer
-        @param string webipDir
+        @param string webipPath
         """
 
         try:
             ## Get web server data
             webipServer = self.__configParser.get(self.__profile, 'webip_server')
-            webipDir = self.__configParser.get(self.__profile, 'webip_dir')
+            webipPath = self.__configParser.get(self.__profile, 'webip_path')
 
             ## Connect to web server
             connection = HTTPConnection(webipServer)
 
             ## Retrieve external IP address
-            connection.request('GET', webipDir)
+            connection.request('GET', webipPath)
             response = connection.getresponse()
 
             ## Successful?
@@ -152,7 +152,7 @@ class ddnsUpdater(object):
                 webip = response.read()
                 return webip.decode('ascii')
             else:
-                raise Exception('Could not retrieve web IP from "'+ webipServer + webipDir +'"!')
+                raise Exception('Could not retrieve web IP from "'+ webipServer + webipPath +'"!')
 
         except Exception as e:
             print('[Exception] ', e)
@@ -178,7 +178,7 @@ class ddnsUpdater(object):
 
             print('DDNS update required')
             server = self.__configParser.get(self.__profile, 'server')
-            serverDir = self.__configParser.get(self.__profile, 'server_dir')
+            serverPath = self.__configParser.get(self.__profile, 'server_path')
             username = self.__configParser.get(self.__profile, 'username')
             password = self.__configParser.get(self.__profile, 'password')
             hostname = self.__configParser.get(self.__profile, 'hostname')
@@ -192,7 +192,7 @@ class ddnsUpdater(object):
             headers = { 'Authorization': 'Basic %s' %  userAndPass , 'user-agent': 'DDNSUpdater/1.0 (PM Code Works DDNS Update Utility)'}
 
             ## Start update
-            connection.request('GET', serverDir +'?hostname='+ hostname +'&myip='+ webip, headers=headers)
+            connection.request('GET', serverPath +'?hostname='+ hostname +'&myip='+ webip, headers=headers)
             response = connection.getresponse()
 
             ## Successful?
