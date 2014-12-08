@@ -22,6 +22,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate
 
+import re
 import os
 import sys
 import configparser
@@ -137,8 +138,9 @@ class ddnsUpdater(object):
 
         try:
             ## Get web server data
-            webipServer = self.__configParser.get(self.__profile, 'webip_server')
-            webipPath = self.__configParser.get(self.__profile, 'webip_path')
+            webipServer = self.__configParser.get(self.__profile, 'external_ip_server')
+            webipPath = self.__configParser.get(self.__profile, 'external_ip_server_path')
+            useRegEx = self.__configParser.getboolean(self.__profile, 'use_regex')
 
             ## Connect to web server
             connection = HTTPConnection(webipServer)
@@ -150,7 +152,19 @@ class ddnsUpdater(object):
             ## Successful?
             if ( response.status == 200 ):
                 webip = response.read()
-                return webip.decode('ascii')
+                webip = webip.decode('ascii')
+
+                ## Use a RegEx to search for IP address in response?
+                if ( useRegEx ):
+                    pat = re.compile("(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})")
+                    result = pat.search(webip)
+
+                    if ( result != None ):
+                        webip = result.group(1)
+                    else:
+                        raise Exception('Failed to use the RegEx!')
+
+                return webip
             else:
                 raise Exception('Could not retrieve web IP from "'+ webipServer + webipPath +'"!')
 
