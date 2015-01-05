@@ -2,11 +2,12 @@ Source: ddns-updater
 Maintainer: Philipp Meisberger <team@pm-codeworks.de>
 Section: python
 Priority: optional
-Standards-Version: 1.0
-Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.4
+Build-Depends: debhelper (>= 9), python3, python3-setuptools
+X-Python3-Version: >= 3.2
 
 Package: ddns-updater
-Depends: python3
+Depends: python3, ${python3:Depends}, ${misc:Depends}
 Architecture: all
 Homepage: http://www.pm-codeworks.de/ddns-updater.html
 Description: DDNS client to register your dynamic IP address
