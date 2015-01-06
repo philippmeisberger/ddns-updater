@@ -1,5 +1,3 @@
 usr/lib/python3/*-packages/*
 files/ddns-updater usr/sbin
 files/ddns.conf etc/ddns-updater
-files/checkip.php usr/share/doc/ddns-updater
-debian/cron.d/ddns-updater etc/cron.d
