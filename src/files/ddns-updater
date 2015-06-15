@@ -28,7 +28,7 @@ import sys
 import configparser
 import argparse
 
-VERSION = '1.0'
+VERSION = '1.1'
 
 class ddnsUpdater(object):
     """
@@ -87,7 +87,7 @@ class ddnsUpdater(object):
             if ( not notify ):
                 return False
 
-            mailServer = self.__configParser.get('Mail', 'stmp_server')
+            mailServer = self.__configParser.get('Mail', 'smtp_server')
             mailServerPort = int(self.__configParser.get('Mail', 'port'), 10)
             mailUsername = self.__configParser.get('Mail', 'username')
             mailPassword = self.__configParser.get('Mail', 'password')
@@ -197,6 +197,16 @@ class ddnsUpdater(object):
             password = self.__configParser.get(self.__profile, 'password')
             hostname = self.__configParser.get(self.__profile, 'hostname')
 
+            if ( self.__configParser.has_option(self.__profile, 'mx')):
+                mailExchange = self.__configParser.get(self.__profile, 'mx')
+            else:
+                mailExchange = None
+
+            if ( self.__configParser.has_option(self.__profile, 'wildcard')):
+                wildcard = self.__configParser.get(self.__profile, 'wildcard')
+            else:
+                wildcard = None
+
             ## Set up the HTTPS connection
             connection = HTTPSConnection(server)
 
@@ -205,8 +215,25 @@ class ddnsUpdater(object):
             userAndPass = b64encode(credentials.encode('UTF-8')).decode('ascii')
             headers = { 'Authorization': 'Basic %s' %  userAndPass , 'user-agent': 'DDNSUpdater/1.0 (PM Code Works DDNS Update Utility)'}
 
+            ## Set up paramters
+            if ( hostname != None and hostname != '' ):
+                parameters = 'hostname='+ hostname
+            else:
+                raise ValueError('No hostname specified!')
+
+            if ( webip != None and webip != '' ):
+                parameters = parameters +'&myip='+ webip
+            else:
+                raise ValueError('Could not get webip!')
+
+            if ( mailExchange != None and mailExchange != '' ):
+                parameters = parameters +'&mx='+ mailExchange
+
+            if ( wildcard != None and wildcard != '' ):
+                parameters = parameters +'&wildcard='+ wildcard
+
             ## Start update
-            connection.request('GET', serverPath +'?hostname='+ hostname +'&myip='+ webip, headers=headers)
+            connection.request('GET', serverPath +'?'+ parameters, headers=headers)
             response = connection.getresponse()
 
             ## Successful?
