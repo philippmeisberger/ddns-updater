@@ -213,7 +213,7 @@ class ddnsUpdater(object):
             ## We need to base64 encode it and then decode it to acsii as python 3 stores it as a byte string
             credentials = username +':'+ password
             userAndPass = b64encode(credentials.encode('UTF-8')).decode('ascii')
-            headers = { 'Authorization': 'Basic %s' %  userAndPass , 'user-agent': 'DDNSUpdater/1.0 (PM Code Works DDNS Update Utility)'}
+            headers = { 'Authorization': 'Basic %s' %  userAndPass , 'user-agent': 'DDNSUpdater/'+ VERSION +' (PM Code Works DDNS Update Utility)'}
 
             ## Set up paramters
             if ( hostname != None and hostname != '' ):

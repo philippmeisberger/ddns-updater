@@ -1,11 +1,11 @@
 ddns-updater (1.1) stable; urgency=low
 
-  * Added new options
+  * Added new options "mx" and "wildcard"
   * Fixed typo in option "smtp_server"
 
- -- Philipp Meisberger <team@pm-codeworks.de>  Sun, 12 Jul 2015 20:04:13 +0200
+ -- Philipp Meisberger <team@pm-codeworks.de>  Thu, 11 Feb 2016 17:50:48 +0100
 
-ddns-updater (1.0) unstable; urgency=low
+ddns-updater (1.0) stable; urgency=low
 
   * Initial release
 
