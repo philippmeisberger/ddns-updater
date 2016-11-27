@@ -24,7 +24,7 @@ Setup
 
 Edit the file */etc/ddns-updater/ddns.conf*.
 
-### Section DDNS
+### Section [DDNS]
 * `server`: The domain name of DNS server providers (without "http://") e.g. *dyndns.strato.com*.
 * `server_path`: The URL path to the DNS server directory e.g. */nic/update*.
 * `username`: Account name at DNS server provider.
@@ -35,13 +35,15 @@ Edit the file */etc/ddns-updater/ddns.conf*.
 * `external_ip_server_path`: URL path to the directory where the PHP script is located e.g. */*
 * `use_regex`: (Optional) Set to `True` to extract the IP address out of HTML formatted HTTP response e.g. when using *checkip.dyndns.com* in `external_ip_server`. When using self-hosted server with *checkip.php* script set to `False`.
 
-### Section Mail
+### Section [Mail]
 * `notify`: (Optional) Set to `True` to enable e-mail notifications like successful IP address updates or errors. Please configure following value or set to `False` to disable notifications. Then the following configuration is not necessary.
 * `smtp_server`: SMTP Server to send the e-mails from.
 * `port`: Port of the SMTP server e.g. 587 or 465.
 * `username`: E-mail account name.
 * `password`: E-mail account password. Don't worry: TLS is used during exchange!
 * `recipient`: E-mail account that should receive the notifications.
+
+DDNS Updater verifies every 10 minutes if the IP address has changed and performs an update if necessary. The interval can be changed by editing file */etc/cron.d/ddns-updater*.
 
 Questions and suggestions
 -------------------------
