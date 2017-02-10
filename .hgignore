@@ -1,5 +1,12 @@
 ## Uses glob syntax, regex sucks ;)
 syntax: glob
 
-debian/ddns-updater/*
+debian/ddns-updater
 **.pyc
+
+## Debian package files
+**.dsc
+**.xz
+**.deb
+**.build
+**.changes
