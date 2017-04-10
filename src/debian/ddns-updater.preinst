@@ -1,4 +1,10 @@
 #!/bin/sh
+
+set -e
+
 if ( test -w '/etc/ddns-updater/ddns.conf' ); then
     sed -i 's/stmp_server/smtp_server/' /etc/ddns-updater/ddns.conf
 fi
+
+#DEBHELPER#
+exit 0
