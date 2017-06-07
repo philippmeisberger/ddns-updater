@@ -6,6 +6,10 @@ DDNS Updater is a Python program to update a dynamic IP address on a DNS server 
 Installation
 ------------
 
+There are two ways of installing DDNS Updater: Installation of the stable or latest version. The stable version is distributed through the PM Code Works APT repository and is fully tested but does not contain the latest changes.
+
+### Installation of the stable version
+
 Add PM Codeworks repository
 
     ~# wget http://apt.pm-codeworks.de/pm-codeworks.list -P /etc/apt/sources.d/
@@ -18,6 +22,27 @@ Add PM Codeworks key
 Install the packages
 
     ~# apt-get install ddns-updater
+
+### Installation of the latest version
+
+The latest version contains the latest changes that may not have been fully tested and should therefore not be used productively. It is recommended to install the stable version.
+
+Install required packages for building
+
+    ~# apt-get install git devscripts
+
+Clone this repository
+
+    ~$ git clone https://github.com/philippmeisberger/ddns-updater.git
+
+Build the package
+
+    ~$ cd ./ddns-updater/
+    ~$ dpkg-buildpackage -uc -us
+
+Install the package
+
+    ~# dpkg -i ../ddns-updater*.deb
 
 Setup
 -----
