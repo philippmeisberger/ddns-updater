@@ -207,6 +207,11 @@ class ddnsUpdater(object):
             else:
                 wildcard = None
 
+            if ( self.__configParser.has_option(self.__profile, 'extra_parameters')):
+                extra_parameters = self.__configParser.get(self.__profile, 'extra_parameters')
+            else:
+                extra_parameters = None
+
             ## Set up the HTTPS connection
             connection = HTTPSConnection(server)
 
@@ -231,6 +236,9 @@ class ddnsUpdater(object):
 
             if ( wildcard != None and wildcard != '' ):
                 parameters = parameters +'&wildcard='+ wildcard
+
+            if ( extra_parameters != None and extra_parameters != '' ):
+                parameters = parameters + '&' + extra_parameters
 
             ## Start update
             connection.request('GET', serverPath +'?'+ parameters, headers=headers)
