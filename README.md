@@ -3,6 +3,10 @@ DDNS Updater
 
 DDNS Updater is a Python program to update a dynamic IP address on a DNS server using the NIC V2.0 protocol. An optional e-mail notification can be enabled.
 
+Build
+-----
+    ~# docker build -t ddns-updater-packaging -f packaging/Dockerfile . && docker run --rm -v ${PWD}/build:/build ddns-updater-packaging
+
 Installation
 ------------
 

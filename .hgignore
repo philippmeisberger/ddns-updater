@@ -10,3 +10,4 @@ debian/ddns-updater
 **.deb
 **.build
 **.changes
+build/
