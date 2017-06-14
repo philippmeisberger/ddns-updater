@@ -28,7 +28,7 @@ import sys
 import configparser
 import argparse
 
-VERSION = '1.1'
+VERSION = '1.2'
 
 class ddnsUpdater(object):
     """
