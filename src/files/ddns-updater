@@ -55,6 +55,8 @@ class ddnsUpdater(object):
         """
         Constructor
 
+        @param string configFile
+        @param string profile
         """
 
         try:
@@ -76,6 +78,7 @@ class ddnsUpdater(object):
 
         @param string subject
         @param string text
+        @return boolean
         """
 
         ## Try to send mail
@@ -132,8 +135,7 @@ class ddnsUpdater(object):
         """
         Retrieves external IP from a web server.
 
-        @param string webipServer
-        @param string webipPath
+        @return string
         """
 
         try:
@@ -179,6 +181,7 @@ class ddnsUpdater(object):
         Updates DNS record
 
         @param string newIp
+        @return boolean
         """
 
         try:
