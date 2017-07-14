@@ -1,7 +1,7 @@
 .TH ddns-updater 1 "December 2014" "" "DDNS Updater"
 
 .SH NAME
-DDNS Updater - DDNS client to register your dynamic IP address
+ddns-updater \- DDNS client to register your dynamic IP address
 
 .SH SYNOPSIS
 .nf
@@ -11,7 +11,7 @@ DDNS Updater - DDNS client to register your dynamic IP address
 .fi
 
 .SH DESCRIPTION
-DDNS Updater is a Python written light-weight Dynamic DNS (DDNS) client to register your IP address on a DNS server using the DynDNS v2.0 protocol. The connection to the DNS server is encrypted using HTTPS. DDNS Updater gets the actual (external) IP address by a specific web server e.g. checkip.dyndns.com.  An e-mail notfication can be enabled to notify errors and successful DDNS updates. The connection to the configured mail server is encrypted using TLS. DDNS Updater has to be configured by editing the /etc/ddns-updater/ddns.conf file.
+\fBddns-updater\fP is a Python written light-weight Dynamic DNS (DDNS) client to register your IP address on a DNS server using the DynDNS v2.0 protocol. The connection to the DNS server is encrypted using HTTPS. \fBddns-updater\fP gets the actual (external) IP address by a specific web server e.g. checkip.dyndns.com. An e-mail notfication can be enabled to notify errors and successful DDNS updates. The connection to the configured mail server is encrypted using TLS. \fBddns-updater\fP has to be configured by editing the /etc/ddns-updater/ddns.conf file.
 
 .SH OPTIONS
 .TP
@@ -36,7 +36,7 @@ Show summary of options.
 .PP
 
 .SH EXAMPLE
-If you using an own web server you can use a simple PHP script to retrieve your external IP address. An example can be found in "/usr/share/doc/ddns-updater/examples/checkip.php".
+If you using an own web server you can use a simple PHP script to retrieve your external IP address. An example can be found in /usr/share/doc/ddns-updater/examples/checkip.php.
 
 .SH FILES
 /etc/ddns-updater/ddns.conf
