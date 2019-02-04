@@ -8,5 +8,5 @@ debian/ddns-updater
 **.dsc
 **.xz
 **.deb
-**.build
+**.build*
 **.changes
