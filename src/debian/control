@@ -12,7 +12,6 @@ Homepage: http://www.pm-codeworks.de/ddns-updater.html
 Package: ddns-updater
 Depends: python3 (>= 3.2), ${python3:Depends}, ${misc:Depends}
 Architecture: all
-Homepage: http://www.pm-codeworks.de/ddns-updater.html
 Description: DDNS client to register your dynamic IP address
  The Dynamic DNS service allows you to alias a dynamic IP address to a
  static hostname, allowing your computer to be more easily accessed from
